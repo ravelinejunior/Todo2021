@@ -90,7 +90,7 @@ class TodoListFragment : Fragment() {
 
     private fun setupRecyclerView() {
         mBinding.recyclerViewFragmentTodo.apply {
-            layoutManager = GridLayoutManager(requireContext(),2)
+            layoutManager = LinearLayoutManager(requireContext())
             setHasFixedSize(true)
             setItemViewCacheSize(25)
             adapter = mAdapter

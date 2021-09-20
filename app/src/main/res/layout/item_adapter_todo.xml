@@ -34,7 +34,7 @@
                 android:textColor="@color/darkGray"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/cardViewPriority"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -49,7 +49,7 @@
                 android:padding="8dp"
                 android:text="@string/description"
                 android:textColor="@color/darkGray"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/textViewTitle"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
 
@@ -63,7 +63,7 @@
                 android:shadowDy="8"
                 app:cardBackgroundColor="@color/red"
                 app:cardCornerRadius="100dp"
-                app:layout_constraintBottom_toBottomOf="@+id/textViewDescription"
+                app:layout_constraintBottom_toBottomOf="@+id/textViewTitle"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/textViewTitle" />
         </androidx.constraintlayout.widget.ConstraintLayout>

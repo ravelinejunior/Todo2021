@@ -37,6 +37,9 @@
             app:exitAnim="@anim/to_left"
             app:popEnterAnim="@anim/from_left"
             app:popExitAnim="@anim/to_right" />
+        <argument
+            android:name="toDoItem"
+            app:argType="br.com.raveline.todo2021.data.db.entity.ToDoItemEntity" />
     </fragment>
     <fragment
         android:id="@+id/addFragment"
