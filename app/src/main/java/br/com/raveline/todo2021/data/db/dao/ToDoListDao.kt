@@ -10,6 +10,9 @@ interface ToDoListDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertItem(toDoItemEntity: ToDoItemEntity)
 
+    @Update
+    suspend fun updateItemData(toDoItem: ToDoItemEntity)
+
     @Query("SELECT * FROM TODO_TABLE ORDER BY id")
     fun readToDoTable(): Flow<List<ToDoItemEntity>>
 

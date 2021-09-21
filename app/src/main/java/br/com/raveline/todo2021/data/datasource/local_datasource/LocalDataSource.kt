@@ -12,6 +12,10 @@ class LocalDataSource @Inject constructor(private val toDoListDao: ToDoListDao) 
         toDoListDao.insertItem(entity)
     }
 
+    suspend fun updateToDoItem(entity: ToDoItemEntity){
+        toDoListDao.updateItemData(entity)
+    }
+
     suspend fun deleteToDoItem(entity: ToDoItemEntity) {
         toDoListDao.deleteToDoItem(entity)
     }

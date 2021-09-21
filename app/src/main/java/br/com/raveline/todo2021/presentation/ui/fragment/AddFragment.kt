@@ -92,6 +92,8 @@ class AddFragment : Fragment() {
             view?.let {
                 Snackbar.make(it, "Preencha todos os campos!", Snackbar.LENGTH_SHORT).show()
             }
+
+            hideKeyboard()
         }
 
 
