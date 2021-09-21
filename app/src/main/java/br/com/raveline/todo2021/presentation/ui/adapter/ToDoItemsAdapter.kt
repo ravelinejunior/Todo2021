@@ -61,7 +61,7 @@ class ToDoItemsAdapter : RecyclerView.Adapter<ToDoItemsAdapter.MyViewHolder>() {
                     binding.cardViewPriority.setCardBackgroundColor(
                         ContextCompat.getColor(
                             binding.cardViewPriority.context,
-                            R.color.blue
+                            R.color.yellow
                         )
                     )
                 }

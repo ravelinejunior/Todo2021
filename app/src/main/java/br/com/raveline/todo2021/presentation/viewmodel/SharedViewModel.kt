@@ -34,7 +34,7 @@ class SharedViewModel(application: Application) : AndroidViewModel(application) 
                 2 -> (parent?.getChildAt(0) as TextView?)?.setTextColor(
                     ContextCompat.getColor(
                         application,
-                        R.color.blue
+                        R.color.yellow
                     )
                 )
 
