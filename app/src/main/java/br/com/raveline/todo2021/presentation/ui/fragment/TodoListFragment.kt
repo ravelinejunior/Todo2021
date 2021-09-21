@@ -47,6 +47,8 @@ class TodoListFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         mBinding = FragmentTodoListBinding.inflate(inflater, container, false)
+        mBinding.lifecycleOwner = this
+        mBinding.mToDoViewModel = mViewModel
 
         //Set menu
         setHasOptionsMenu(true)
@@ -69,22 +71,24 @@ class TodoListFragment : Fragment() {
         lifecycleScope.launchWhenStarted {
             mViewModel.toDoReadLiveData.observe(viewLifecycleOwner, { toDoItems ->
                 try {
-                    if (toDoItems.isNotEmpty()) {
-                        mBinding.apply {
-                            textViewFragmentTodoNoData.visibility = GONE
-                            imageViewFragmentTodoNoData.visibility = GONE
-                            recyclerViewFragmentTodo.visibility = VISIBLE
-                        }
+                    mAdapter.setRecipeData(toDoItems)
 
-                        mAdapter.setRecipeData(toDoItems)
+                    /* if (toDoItems.isNotEmpty()) {
+                         mBinding.apply {
+                             textViewFragmentTodoNoData.visibility = GONE
+                             imageViewFragmentTodoNoData.visibility = GONE
+                             recyclerViewFragmentTodo.visibility = VISIBLE
+                         }
 
-                    } else {
-                        mBinding.apply {
-                            textViewFragmentTodoNoData.visibility = VISIBLE
-                            imageViewFragmentTodoNoData.visibility = VISIBLE
-                            mAdapter.setRecipeData(toDoItems)
-                        }
-                    }
+                         mAdapter.setRecipeData(toDoItems)
+
+                     } else {
+                         mBinding.apply {
+                             textViewFragmentTodoNoData.visibility = VISIBLE
+                             imageViewFragmentTodoNoData.visibility = VISIBLE
+                             mAdapter.setRecipeData(toDoItems)
+                         }
+                     }*/
                 } catch (e: Exception) {
                     Log.i("TAGFRAGMENT", e.message.toString())
                 }

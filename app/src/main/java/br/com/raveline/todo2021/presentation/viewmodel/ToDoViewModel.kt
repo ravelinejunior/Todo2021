@@ -14,7 +14,7 @@ class ToDoViewModel @Inject constructor(
 ) :
     AndroidViewModel(application) {
 
-    private val toDoMutableLiveData: MutableLiveData<List<ToDoItemEntity>> = MutableLiveData()
+    val toDoMutableLiveData: MutableLiveData<List<ToDoItemEntity>> = MutableLiveData()
     val toDoLiveData: LiveData<List<ToDoItemEntity>> = toDoMutableLiveData
 
     val toDoReadLiveData = localDataSource.readToDoListData().asLiveData()
