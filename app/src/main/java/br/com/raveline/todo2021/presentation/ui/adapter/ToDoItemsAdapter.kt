@@ -10,7 +10,7 @@ import br.com.raveline.todo2021.utils.ToDoDiffUtils
 
 class ToDoItemsAdapter : RecyclerView.Adapter<ToDoItemsAdapter.MyViewHolder>() {
 
-    private var toDoItemsList = emptyList<ToDoItemEntity>()
+     var toDoItemsList = emptyList<ToDoItemEntity>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val mBinding =

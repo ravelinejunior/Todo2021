@@ -10,9 +10,12 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import br.com.raveline.todo2021.R
 import br.com.raveline.todo2021.databinding.FragmentTodoListBinding
+import br.com.raveline.todo2021.presentation.helpers.SwipeToDelete
 import br.com.raveline.todo2021.presentation.ui.adapter.ToDoItemsAdapter
 import br.com.raveline.todo2021.presentation.viewmodel.ToDoViewModel
 import br.com.raveline.todo2021.presentation.viewmodel.viewmodel_factory.ToDoViewModelFactory
@@ -71,28 +74,36 @@ class TodoListFragment : Fragment() {
             mViewModel.toDoReadLiveData.observe(viewLifecycleOwner, { toDoItems ->
                 try {
                     mAdapter.setRecipeData(toDoItems)
-
-                    /* if (toDoItems.isNotEmpty()) {
-                         mBinding.apply {
-                             textViewFragmentTodoNoData.visibility = GONE
-                             imageViewFragmentTodoNoData.visibility = GONE
-                             recyclerViewFragmentTodo.visibility = VISIBLE
-                         }
-
-                         mAdapter.setRecipeData(toDoItems)
-
-                     } else {
-                         mBinding.apply {
-                             textViewFragmentTodoNoData.visibility = VISIBLE
-                             imageViewFragmentTodoNoData.visibility = VISIBLE
-                             mAdapter.setRecipeData(toDoItems)
-                         }
-                     }*/
                 } catch (e: Exception) {
                     Log.i("TAGFRAGMENT", e.message.toString())
                 }
             })
         }
+    }
+
+    private fun swipeToDelete(recyclerView: RecyclerView) {
+        val swipeToDeleteCallback = object : SwipeToDelete() {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                lifecycleScope.launch {
+                    val itemToDelete = mAdapter.toDoItemsList[viewHolder.absoluteAdapterPosition]
+                    mViewModel.deleteData(itemToDelete)
+
+                    view?.let {
+                        Snackbar.make(it, "Tarefa deletada com sucesso!", Snackbar.LENGTH_LONG)
+                            .setAction("Desfazer") {
+                                lifecycleScope.launch {
+                                    mViewModel.insertData(itemToDelete)
+                                }
+                            }
+                            .show()
+                    }
+                }
+
+            }
+        }
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(recyclerView)
+
     }
 
     private fun setupRecyclerView() {
@@ -102,6 +113,8 @@ class TodoListFragment : Fragment() {
             setItemViewCacheSize(25)
             adapter = mAdapter
         }
+
+        swipeToDelete(mBinding.recyclerViewFragmentTodo)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
