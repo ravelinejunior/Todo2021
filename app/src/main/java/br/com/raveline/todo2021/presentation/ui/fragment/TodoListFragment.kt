@@ -21,6 +21,7 @@ import br.com.raveline.todo2021.presentation.helpers.SwipeToDelete
 import br.com.raveline.todo2021.presentation.ui.adapter.ToDoItemsAdapter
 import br.com.raveline.todo2021.presentation.viewmodel.ToDoViewModel
 import br.com.raveline.todo2021.presentation.viewmodel.viewmodel_factory.ToDoViewModelFactory
+import br.com.raveline.todo2021.utils.observeOnce
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.LandingAnimator
@@ -137,11 +138,13 @@ class TodoListFragment : Fragment(), SearchView.OnQueryTextListener {
                 viewLifecycleOwner,
                 { items ->
                     mAdapter.setToDoItemData(items)
+                    mBinding.recyclerViewFragmentTodo.scheduleLayoutAnimation()
                 })
             R.id.menuItemPriorityLowMenuTodoId -> mViewModel.sortByLowPriorityLiveData.observe(
                 viewLifecycleOwner,
                 { items ->
                     mAdapter.setToDoItemData(items)
+                    mBinding.recyclerViewFragmentTodo.scheduleLayoutAnimation()
                 })
         }
         return super.onOptionsItemSelected(item)
@@ -223,9 +226,10 @@ class TodoListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun searchToDoItem(query: String) {
         val searchQuery = "%$query%"
-        mViewModel.searchToDoItem(searchQuery).observe(viewLifecycleOwner, { items ->
+        mViewModel.searchToDoItem(searchQuery).observeOnce(viewLifecycleOwner, { items ->
             items?.let {
                 mAdapter.setToDoItemData(items)
+                mBinding.recyclerViewFragmentTodo.scheduleLayoutAnimation()
             }
         })
     }

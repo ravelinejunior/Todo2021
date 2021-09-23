@@ -13,7 +13,7 @@ interface ToDoListDao {
     @Update
     suspend fun updateItemData(toDoItem: ToDoItemEntity)
 
-    @Query("SELECT * FROM TODO_TABLE ORDER BY id")
+    @Query("SELECT * FROM TODO_TABLE ORDER BY id DESC")
     fun readToDoTable(): Flow<List<ToDoItemEntity>>
 
     @Query("SELECT * FROM TODO_TABLE WHERE title LIKE :searchQuery OR description LIKE :searchQuery")
