@@ -13,8 +13,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.StaggeredGridLayoutManager
 import br.com.raveline.todo2021.R
 import br.com.raveline.todo2021.databinding.FragmentTodoListBinding
 import br.com.raveline.todo2021.presentation.helpers.SwipeToDelete
@@ -116,7 +116,7 @@ class TodoListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private fun setupRecyclerView() {
         mBinding.recyclerViewFragmentTodo.apply {
-            layoutManager = LinearLayoutManager(requireContext())
+            layoutManager = StaggeredGridLayoutManager(2, StaggeredGridLayoutManager.VERTICAL)
             setHasFixedSize(true)
             setItemViewCacheSize(25)
             itemAnimator = LandingAnimator(OvershootInterpolator(1f)).apply {
