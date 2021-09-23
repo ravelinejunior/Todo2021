@@ -16,6 +16,15 @@ interface ToDoListDao {
     @Query("SELECT * FROM TODO_TABLE ORDER BY id")
     fun readToDoTable(): Flow<List<ToDoItemEntity>>
 
+    @Query("SELECT * FROM TODO_TABLE WHERE title LIKE :searchQuery OR description LIKE :searchQuery")
+    fun searchToDoItem(searchQuery: String): Flow<List<ToDoItemEntity>>
+
+    @Query("SELECT * FROM TODO_TABLE ORDER BY CASE WHEN priority LIKE 'H%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'L%' THEN 3 END")
+    fun sortByHighPriority(): Flow<List<ToDoItemEntity>>
+
+    @Query("SELECT * FROM TODO_TABLE ORDER BY CASE WHEN priority LIKE 'L%' THEN 1 WHEN priority LIKE 'M%' THEN 2 WHEN priority LIKE 'H%' THEN 3 END")
+    fun sortByLowPriority(): Flow<List<ToDoItemEntity>>
+
     @Delete()
     suspend fun deleteToDoItem(toDoItemEntity: ToDoItemEntity)
 

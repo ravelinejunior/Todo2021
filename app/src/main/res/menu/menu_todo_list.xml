@@ -18,9 +18,6 @@
                     android:id="@+id/menuItemPriorityHighMenuTodoId"
                     android:title="@string/prioridade_alta" />
                 <item
-                    android:id="@+id/menuItemPriorityMediumMenuTodoId"
-                    android:title="@string/prioridade_media" />
-                <item
                     android:id="@+id/menuItemPriorityLowMenuTodoId"
                     android:title="@string/prioridade_baixa" />
             </menu>

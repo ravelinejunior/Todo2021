@@ -8,11 +8,14 @@ import javax.inject.Inject
 class LocalDataSource @Inject constructor(private val toDoListDao: ToDoListDao) {
     fun readToDoListData(): Flow<List<ToDoItemEntity>> = toDoListDao.readToDoTable()
 
+    fun searchToDoItem(searchQuery: String): Flow<List<ToDoItemEntity>> =
+        toDoListDao.searchToDoItem(searchQuery)
+
     suspend fun insertToDoItem(entity: ToDoItemEntity) {
         toDoListDao.insertItem(entity)
     }
 
-    suspend fun updateToDoItem(entity: ToDoItemEntity){
+    suspend fun updateToDoItem(entity: ToDoItemEntity) {
         toDoListDao.updateItemData(entity)
     }
 
@@ -23,4 +26,14 @@ class LocalDataSource @Inject constructor(private val toDoListDao: ToDoListDao) 
     suspend fun deleteAllItemsFromDatabase() {
         toDoListDao.deleteToDoTable()
     }
+
+    fun sortByHighPriority(): Flow<List<ToDoItemEntity>> {
+        return toDoListDao.sortByHighPriority()
+    }
+
+    fun sortByLowPriority(): Flow<List<ToDoItemEntity>> {
+        return toDoListDao.sortByLowPriority()
+    }
+
+
 }

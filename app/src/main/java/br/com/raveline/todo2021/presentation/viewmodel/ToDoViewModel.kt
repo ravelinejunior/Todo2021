@@ -1,7 +1,10 @@
 package br.com.raveline.todo2021.presentation.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.*
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.viewModelScope
 import br.com.raveline.todo2021.data.datasource.local_datasource.LocalDataSource
 import br.com.raveline.todo2021.data.db.entity.ToDoItemEntity
 import kotlinx.coroutines.Dispatchers
@@ -14,10 +17,14 @@ class ToDoViewModel @Inject constructor(
 ) :
     AndroidViewModel(application) {
 
-    val toDoMutableLiveData: MutableLiveData<List<ToDoItemEntity>> = MutableLiveData()
-    val toDoLiveData: LiveData<List<ToDoItemEntity>> = toDoMutableLiveData
+    val sortByHighPriorityLiveData = localDataSource.sortByHighPriority().asLiveData()
+    val sortByLowPriorityLiveData = localDataSource.sortByLowPriority().asLiveData()
 
     val toDoReadLiveData = localDataSource.readToDoListData().asLiveData()
+
+    fun searchToDoItem(searchQuery: String): LiveData<List<ToDoItemEntity>> {
+        return localDataSource.searchToDoItem(searchQuery).asLiveData()
+    }
 
     suspend fun insertData(toDoItemData: ToDoItemEntity) =
         viewModelScope.launch(Dispatchers.IO) {

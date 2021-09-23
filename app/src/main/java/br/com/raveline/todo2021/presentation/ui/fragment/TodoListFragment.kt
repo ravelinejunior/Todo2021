@@ -5,7 +5,8 @@ import android.os.Bundle
 import android.util.Log
 import android.view.*
 import android.view.animation.OvershootInterpolator
-
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.widget.SearchView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -23,12 +24,11 @@ import br.com.raveline.todo2021.presentation.viewmodel.viewmodel_factory.ToDoVie
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import jp.wasabeef.recyclerview.animators.LandingAnimator
-import jp.wasabeef.recyclerview.animators.SlideInUpAnimator
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class TodoListFragment : Fragment() {
+class TodoListFragment : Fragment(), SearchView.OnQueryTextListener {
 
     private lateinit var mBinding: FragmentTodoListBinding
 
@@ -39,6 +39,8 @@ class TodoListFragment : Fragment() {
 
     @Inject
     lateinit var mAdapter: ToDoItemsAdapter
+
+    private var searchView: SearchView? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,6 +60,7 @@ class TodoListFragment : Fragment() {
         //Set menu
         setHasOptionsMenu(true)
 
+
         return mBinding.root
     }
 
@@ -70,13 +73,15 @@ class TodoListFragment : Fragment() {
             findNavController().navigate(R.id.action_todoListFragment_to_addFragment)
         }
 
+        backPressedSearchView()
+
     }
 
     private fun getItemsFromDb() {
         lifecycleScope.launchWhenStarted {
             mViewModel.toDoReadLiveData.observe(viewLifecycleOwner, { toDoItems ->
                 try {
-                    mAdapter.setRecipeData(toDoItems)
+                    mAdapter.setToDoItemData(toDoItems)
                 } catch (e: Exception) {
                     Log.i("TAGFRAGMENT", e.message.toString())
                 }
@@ -122,11 +127,22 @@ class TodoListFragment : Fragment() {
         }
 
         swipeToDelete(mBinding.recyclerViewFragmentTodo)
+
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        if (item.itemId == R.id.itemDeleteAllMenuTodoId) {
-            displayDialogDeleteItems()
+        when (item.itemId) {
+            R.id.itemDeleteAllMenuTodoId -> displayDialogDeleteItems()
+            R.id.menuItemPriorityHighMenuTodoId -> mViewModel.sortByHighPriorityLiveData.observe(
+                viewLifecycleOwner,
+                { items ->
+                    mAdapter.setToDoItemData(items)
+                })
+            R.id.menuItemPriorityLowMenuTodoId -> mViewModel.sortByLowPriorityLiveData.observe(
+                viewLifecycleOwner,
+                { items ->
+                    mAdapter.setToDoItemData(items)
+                })
         }
         return super.onOptionsItemSelected(item)
     }
@@ -166,6 +182,51 @@ class TodoListFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater.inflate(R.menu.menu_todo_list, menu)
+
+        val searchMenu = menu.findItem(R.id.itemSearchMenuTodoId)
+        searchView = searchMenu.actionView as? SearchView
+
+        searchView?.isSubmitButtonEnabled = true
+        searchView?.queryHint = "Digite ao menos 3 caracteres"
+        searchView?.onActionViewCollapsed()
+        searchView?.isIconified = true
+
+        searchView?.setOnQueryTextListener(this)
     }
 
+    private fun backPressedSearchView() {
+        if (searchView != null) {
+            requireActivity().onBackPressedDispatcher.addCallback(requireActivity(),
+                object : OnBackPressedCallback(true) {
+                    override fun handleOnBackPressed() {
+                        searchView?.onActionViewCollapsed()
+                        searchView?.isIconified = true
+                    }
+                })
+        }
+    }
+
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        if (query != null) {
+            searchToDoItem(query)
+            return true
+        } else return false
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        if (newText != null) {
+            searchToDoItem(newText)
+        }
+        return true
+    }
+
+    private fun searchToDoItem(query: String) {
+        val searchQuery = "%$query%"
+        mViewModel.searchToDoItem(searchQuery).observe(viewLifecycleOwner, { items ->
+            items?.let {
+                mAdapter.setToDoItemData(items)
+            }
+        })
+    }
 }

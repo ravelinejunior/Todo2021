@@ -36,7 +36,7 @@ class ToDoItemsAdapter : RecyclerView.Adapter<ToDoItemsAdapter.MyViewHolder>() {
 
     }
 
-    fun setRecipeData(newData: List<ToDoItemEntity>) {
+    fun setToDoItemData(newData: List<ToDoItemEntity>) {
         val toDoDiffUtils = ToDoDiffUtils(toDoItemsList, newData)
         val diffUtilResult = DiffUtil.calculateDiff(toDoDiffUtils)
         toDoItemsList = newData
